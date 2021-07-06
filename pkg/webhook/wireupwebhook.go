@@ -198,8 +198,15 @@ func (w *WireUp) createOrUpdateValiatingWebhookConfiguration(ca []byte, gvk sche
 		}
 	}
 
-	validator.Webhooks[0].ClientConfig.Service.Namespace = w.WebHookeSvcKey.Namespace
-	validator.Webhooks[0].ClientConfig.CABundle = ca
+		// since we only have 1 webhook over here, override the original one is ok
+	validator.Webhooks = []admissionv1.ValidatingWebhook{
+		{
+			ClientConfig: admissionv1.WebhookClientConfig{
+				Service:  &admissionv1.ServiceReference{Namespace: w.WebHookeSvcKey.Namespace},
+				CABundle: ca,
+			},
+		},
+	}
 
 	if err := w.mgr.GetClient().Update(context.TODO(), validator); err != nil {
 		return gerr.Wrap(err, fmt.Sprintf("Failed to update validating webhook %s", validatorName))

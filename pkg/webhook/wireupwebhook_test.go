@@ -21,7 +21,6 @@ import (
 var _ = Describe("test if wireUp can create CA, service and validatingWebhookConfigration", func() {
 	Context("given a manager it create svc and validating webhook config", func() {
 		It("should create a service and ValidatingWebhookConfiguration", func() {
-			Skip("Skip temporarely for prow test")
 			testNs := "default"
 			os.Setenv("POD_NAMESPACE", testNs)
 			os.Setenv("DEPLOYMENT_LABEL", testNs)
